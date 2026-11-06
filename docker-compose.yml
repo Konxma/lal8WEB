@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: nest_user
+      POSTGRES_PASSWORD: nest_password
+      POSTGRES_DB: lab8_store
+      POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=uk-UA"
+    ports:
+      - "5432:5432"
+    volumes:
+      - lab8_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nest_user -d lab8_store"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+volumes:
+  lab8_pgdata:

@@ -1,0 +1,74 @@
+@base = http://localhost:3000
+# Виконуйте зверху вниз. Для VS Code REST Client значення ID беруться з іменованих відповідей.
+### Список колекцій
+GET {{base}}/collections
+
+### Створити колекцію (назва має бути унікальна)
+# @name collection
+POST {{base}}/collections
+Content-Type: application/json
+
+{"name":"Осінь demo 2026","season":"Осінь"}
+
+### Створення агрегата в транзакції
+# @name clothing
+POST {{base}}/clothes/transactional
+Content-Type: application/json
+
+{
+ "title":"  Футболка demo  ","price":799.99,"size":"M","material":"Бавовна / льон","color":"Білий",
+ "collectionId":"{{collection.response.body.id}}",
+ "materials":[{"name":"Бавовна"},{"name":"Льон"}],
+ "care":{"washTemperature":30,"ironAllowed":true,"instructions":"Делікатне прання"}
+}
+
+### GET з repository.findOne relations
+GET {{base}}/clothes/{{clothing.response.body.id}}
+
+### Повний агрегат QueryBuilder: усі три типи зв’язків
+GET {{base}}/clothes/{{clothing.response.body.id}}/aggregate
+
+### Фільтри за колекцією та назвою матеріалу
+GET {{base}}/clothes?collectionId={{collection.response.body.id}}&material=Бавовна
+
+### Матеріали та їх UUID
+GET {{base}}/materials
+
+### Повне оновлення з транзакцією
+PUT {{base}}/clothes/{{clothing.response.body.id}}
+Content-Type: application/json
+
+{
+ "title":"Футболка оновлена","price":850,"size":"M","material":"Бавовна","color":"Чорний",
+ "collectionId":"{{collection.response.body.id}}","materials":[{"name":"Бавовна"}],
+ "care":{"washTemperature":40,"ironAllowed":true,"instructions":"Прати при 40 градусах"}
+}
+
+### Демонстрація rollback: перед запуском сервера LAB_ALLOW_FAILURE_DEMO=true
+# Збій виникає ПІСЛЯ збереження товару й нового матеріалу; очікується 400.
+POST {{base}}/clothes/transactional
+Content-Type: application/json
+
+{
+ "title":"ROLLBACK-DEMO","price":850,"size":"L","material":"Тест","color":"Синій",
+ "collectionId":"{{collection.response.body.id}}","materials":[{"name":"ROLLBACK-MATERIAL"}],
+ "care":{"washTemperature":30,"ironAllowed":false,"instructions":"Тест"},"simulateFailure":true
+}
+
+### Очікується []: товар із невдалої транзакції відсутній
+GET {{base}}/clothes?search=ROLLBACK-DEMO
+
+### Матеріал ROLLBACK-MATERIAL також має бути відсутній
+GET {{base}}/materials
+
+### Валідація: 400 (не є демонстрацією rollback)
+POST {{base}}/clothes
+Content-Type: application/json
+
+{"price":-1}
+
+### Каскадне видалення товару і його догляду та M:N зв’язків
+DELETE {{base}}/clothes/{{clothing.response.body.id}}
+
+### Каскадне видалення колекції й усіх її товарів
+DELETE {{base}}/collections/{{collection.response.body.id}}

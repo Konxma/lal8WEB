@@ -1,0 +1,1332 @@
+{
+  "date": "2026-11-06T06:57:48.879Z",
+  "database": "lab8_verification",
+  "checks": [
+    {
+      "name": "Усі 3 міграції застосовуються до порожньої схеми",
+      "result": "PASS"
+    },
+    {
+      "name": "Відкат 1:1, потім M:N та повторне виконання",
+      "result": "PASS"
+    },
+    {
+      "name": "Схема не відрізняється від метаданих TypeORM; synchronize=false",
+      "result": "PASS"
+    },
+    {
+      "name": "Створення 1:M, каскадне збереження M:N та деталей 1:1",
+      "result": "PASS"
+    },
+    {
+      "name": "findOne з relations та повний агрегат через QueryBuilder",
+      "result": "PASS"
+    },
+    {
+      "name": "Фільтри за колекцією, назвою / ID матеріалу, пошук та limit",
+      "result": "PASS"
+    },
+    {
+      "name": "Валідація вкладених DTO, UUID, зайвих полів і від’ємної ціни",
+      "result": "PASS"
+    },
+    {
+      "name": "Справжній rollback після INSERT товару й нових матеріалів",
+      "result": "PASS"
+    },
+    {
+      "name": "Rollback повного оновлення повертає старі поля та M:N",
+      "result": "PASS"
+    },
+    {
+      "name": "Повне оновлення агрегата, стабільний ID деталей і PATCH",
+      "result": "PASS"
+    },
+    {
+      "name": "Повторне використання спільного матеріалу та обмеження БД",
+      "result": "PASS"
+    },
+    {
+      "name": "Замовлення використовують актуальний товар PostgreSQL",
+      "result": "PASS"
+    },
+    {
+      "name": "Дані збережено після перезапуску; імітація збою вимкнена за замовчуванням",
+      "result": "PASS"
+    },
+    {
+      "name": "Видалення товару каскадно видаляє догляд і рядки M:N; матеріал спільний",
+      "result": "PASS"
+    },
+    {
+      "name": "Видалення колекції каскадно видаляє одяг, догляд і зв’язки M:N",
+      "result": "PASS"
+    }
+  ],
+  "observations": [
+    {
+      "operation": "rollback",
+      "before": {
+        "clothes": 1,
+        "materials": 2,
+        "care": 1,
+        "links": 2
+      },
+      "after": {
+        "clothes": 1,
+        "materials": 2,
+        "care": 1,
+        "links": 2
+      }
+    },
+    {
+      "operation": "rollback",
+      "before": {
+        "clothes": 1,
+        "materials": 2,
+        "care": 1,
+        "links": 2
+      },
+      "after": {
+        "clothes": 1,
+        "materials": 2,
+        "care": 1,
+        "links": 2
+      }
+    }
+  ],
+  "requests": 36,
+  "transcript": [
+    {
+      "method": "POST",
+      "path": "/collections",
+      "request": {
+        "name": "QA-1793948249763 Осінь",
+        "season": "Осінь 2026"
+      },
+      "status": 201,
+      "response": {
+        "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "name": "QA-1793948249763 Осінь",
+        "season": "Осінь 2026"
+      },
+      "headers": {
+        "responseTime": "29.33ms"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes/transactional",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        }
+      },
+      "status": 201,
+      "response": {
+        "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "title": "Футболка QA-1793948249763",
+        "slug": "futbolka-qa-1793948249763",
+        "price": "799.99",
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collection": {
+          "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+          "name": "QA-1793948249763 Осінь",
+          "season": "Осінь 2026"
+        },
+        "materials": [
+          {
+            "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "id": "ebd39dcb-fccd-4091-b2d0-f31aad5a0295",
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "createdAt": "2026-11-06T06:57:44.980Z",
+        "updatedAt": "2026-11-06T06:57:44.980Z"
+      },
+      "headers": {
+        "responseTime": "44.00ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47",
+      "status": 200,
+      "response": {
+        "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "title": "Футболка QA-1793948249763",
+        "slug": "futbolka-qa-1793948249763",
+        "price": "799.99",
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collection": {
+          "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+          "name": "QA-1793948249763 Осінь",
+          "season": "Осінь 2026"
+        },
+        "materials": [
+          {
+            "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "id": "ebd39dcb-fccd-4091-b2d0-f31aad5a0295",
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "createdAt": "2026-11-06T06:57:44.980Z",
+        "updatedAt": "2026-11-06T06:57:44.980Z"
+      },
+      "headers": {
+        "responseTime": "7.45ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47/aggregate",
+      "status": 200,
+      "response": {
+        "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "title": "Футболка QA-1793948249763",
+        "slug": "futbolka-qa-1793948249763",
+        "price": "799.99",
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collection": {
+          "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+          "name": "QA-1793948249763 Осінь",
+          "season": "Осінь 2026"
+        },
+        "materials": [
+          {
+            "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "id": "ebd39dcb-fccd-4091-b2d0-f31aad5a0295",
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "createdAt": "2026-11-06T06:57:44.980Z",
+        "updatedAt": "2026-11-06T06:57:44.980Z"
+      },
+      "headers": {
+        "responseTime": "4.44ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes?collectionId=574fb835-d9ee-4b94-8268-952c2ae4b09a",
+      "status": 200,
+      "response": [
+        {
+          "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+          "title": "Футболка QA-1793948249763",
+          "slug": "futbolka-qa-1793948249763",
+          "price": "799.99",
+          "size": "M",
+          "material": "Бавовна / льон",
+          "color": "Білий",
+          "collection": {
+            "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+            "name": "QA-1793948249763 Осінь",
+            "season": "Осінь 2026"
+          },
+          "materials": [
+            {
+              "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+              "name": "QA-1793948249763 Бавовна"
+            },
+            {
+              "id": "ebd39dcb-fccd-4091-b2d0-f31aad5a0295",
+              "name": "QA-1793948249763 Льон"
+            }
+          ],
+          "care": {
+            "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+            "washTemperature": 30,
+            "ironAllowed": true,
+            "instructions": "Делікатне прання"
+          },
+          "createdAt": "2026-11-06T06:57:44.980Z",
+          "updatedAt": "2026-11-06T06:57:44.980Z"
+        }
+      ],
+      "headers": {
+        "responseTime": "8.73ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes?collection=QA-1793948249763+%D0%9E%D1%81%D1%96%D0%BD%D1%8C",
+      "status": 200,
+      "response": [
+        {
+          "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+          "title": "Футболка QA-1793948249763",
+          "slug": "futbolka-qa-1793948249763",
+          "price": "799.99",
+          "size": "M",
+          "material": "Бавовна / льон",
+          "color": "Білий",
+          "collection": {
+            "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+            "name": "QA-1793948249763 Осінь",
+            "season": "Осінь 2026"
+          },
+          "materials": [
+            {
+              "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+              "name": "QA-1793948249763 Бавовна"
+            },
+            {
+              "id": "ebd39dcb-fccd-4091-b2d0-f31aad5a0295",
+              "name": "QA-1793948249763 Льон"
+            }
+          ],
+          "care": {
+            "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+            "washTemperature": 30,
+            "ironAllowed": true,
+            "instructions": "Делікатне прання"
+          },
+          "createdAt": "2026-11-06T06:57:44.980Z",
+          "updatedAt": "2026-11-06T06:57:44.980Z"
+        }
+      ],
+      "headers": {
+        "responseTime": "6.07ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes?material=QA-1793948249763+%D0%91%D0%B0%D0%B2%D0%BE%D0%B2%D0%BD%D0%B0",
+      "status": 200,
+      "response": [
+        {
+          "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+          "title": "Футболка QA-1793948249763",
+          "slug": "futbolka-qa-1793948249763",
+          "price": "799.99",
+          "size": "M",
+          "material": "Бавовна / льон",
+          "color": "Білий",
+          "collection": {
+            "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+            "name": "QA-1793948249763 Осінь",
+            "season": "Осінь 2026"
+          },
+          "materials": [
+            {
+              "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+              "name": "QA-1793948249763 Бавовна"
+            },
+            {
+              "id": "ebd39dcb-fccd-4091-b2d0-f31aad5a0295",
+              "name": "QA-1793948249763 Льон"
+            }
+          ],
+          "care": {
+            "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+            "washTemperature": 30,
+            "ironAllowed": true,
+            "instructions": "Делікатне прання"
+          },
+          "createdAt": "2026-11-06T06:57:44.980Z",
+          "updatedAt": "2026-11-06T06:57:44.980Z"
+        }
+      ],
+      "headers": {
+        "responseTime": "8.04ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes?materialId=7fa226c6-a181-47de-b611-6832a73a8f2c",
+      "status": 200,
+      "response": [
+        {
+          "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+          "title": "Футболка QA-1793948249763",
+          "slug": "futbolka-qa-1793948249763",
+          "price": "799.99",
+          "size": "M",
+          "material": "Бавовна / льон",
+          "color": "Білий",
+          "collection": {
+            "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+            "name": "QA-1793948249763 Осінь",
+            "season": "Осінь 2026"
+          },
+          "materials": [
+            {
+              "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+              "name": "QA-1793948249763 Бавовна"
+            },
+            {
+              "id": "ebd39dcb-fccd-4091-b2d0-f31aad5a0295",
+              "name": "QA-1793948249763 Льон"
+            }
+          ],
+          "care": {
+            "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+            "washTemperature": 30,
+            "ironAllowed": true,
+            "instructions": "Делікатне прання"
+          },
+          "createdAt": "2026-11-06T06:57:44.980Z",
+          "updatedAt": "2026-11-06T06:57:44.980Z"
+        }
+      ],
+      "headers": {
+        "responseTime": "10.85ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes?collectionId=574fb835-d9ee-4b94-8268-952c2ae4b09a&material=QA-1793948249763+%D0%91%D0%B0%D0%B2%D0%BE%D0%B2%D0%BD%D0%B0&search=%D1%84%D1%83%D1%82%D0%B1%D0%BE%D0%BB%D0%BA%D0%B0&limit=1",
+      "status": 200,
+      "response": [
+        {
+          "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+          "title": "Футболка QA-1793948249763",
+          "slug": "futbolka-qa-1793948249763",
+          "price": "799.99",
+          "size": "M",
+          "material": "Бавовна / льон",
+          "color": "Білий",
+          "collection": {
+            "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+            "name": "QA-1793948249763 Осінь",
+            "season": "Осінь 2026"
+          },
+          "materials": [
+            {
+              "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+              "name": "QA-1793948249763 Бавовна"
+            },
+            {
+              "id": "ebd39dcb-fccd-4091-b2d0-f31aad5a0295",
+              "name": "QA-1793948249763 Льон"
+            }
+          ],
+          "care": {
+            "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+            "washTemperature": 30,
+            "ironAllowed": true,
+            "instructions": "Делікатне прання"
+          },
+          "createdAt": "2026-11-06T06:57:44.980Z",
+          "updatedAt": "2026-11-06T06:57:44.980Z"
+        }
+      ],
+      "headers": {
+        "responseTime": "7.88ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes?material='%20OR%201%3D1%20--",
+      "status": 200,
+      "response": [],
+      "headers": {
+        "responseTime": "4.51ms"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": -1,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        }
+      },
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.111Z",
+        "path": "/clothes",
+        "method": "POST",
+        "error": "Bad Request",
+        "message": [
+          "price must be a positive number"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "hacker": true
+      },
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.115Z",
+        "path": "/clothes",
+        "method": "POST",
+        "error": "Bad Request",
+        "message": [
+          "property hacker should not exist"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "washTemperature": 99,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        }
+      },
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.121Z",
+        "path": "/clothes",
+        "method": "POST",
+        "error": "Bad Request",
+        "message": [
+          "care.washTemperature must not be greater than 95"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "invalid",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        }
+      },
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.124Z",
+        "path": "/clothes",
+        "method": "POST",
+        "error": "Bad Request",
+        "message": [
+          "collectionId must be a UUID"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "   "
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        }
+      },
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.127Z",
+        "path": "/clothes",
+        "method": "POST",
+        "error": "Bad Request",
+        "message": [
+          "materials.0.name should not be empty"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": null
+      },
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.130Z",
+        "path": "/clothes",
+        "method": "POST",
+        "error": "Bad Request",
+        "message": [
+          "care should not be empty",
+          "nested property care must be either object or array"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "simulateFailure": null
+      },
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.133Z",
+        "path": "/clothes",
+        "method": "POST",
+        "error": "Bad Request",
+        "message": [
+          "simulateFailure must be a boolean value"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes/not-uuid",
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.137Z",
+        "path": "/clothes/not-uuid",
+        "method": "GET",
+        "error": "Bad Request",
+        "message": [
+          "Validation failed (uuid is expected)"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes?limit=0",
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.139Z",
+        "path": "/clothes?limit=0",
+        "method": "GET",
+        "error": "Bad Request",
+        "message": [
+          "limit must not be less than 1"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "98b6337d-708a-4967-ac70-19bbfeb9317b",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        }
+      },
+      "status": 404,
+      "response": {
+        "success": false,
+        "statusCode": 404,
+        "timestamp": "2026-11-06T06:57:45.147Z",
+        "path": "/clothes",
+        "method": "POST",
+        "error": "Not Found",
+        "message": [
+          "Колекцію не знайдено"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes/transactional",
+      "request": {
+        "title": "QA-1793948249763 FAIL",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Rollback"
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "simulateFailure": true
+      },
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.165Z",
+        "path": "/clothes/transactional",
+        "method": "POST",
+        "error": "Bad Request",
+        "message": [
+          "Імітація збою після збереження товару й матеріалів. Транзакцію відкочено."
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47",
+      "request": {
+        "title": "QA-1793948249763 Changed",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 UpdateRollback"
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "simulateFailure": true
+      },
+      "status": 400,
+      "response": {
+        "success": false,
+        "statusCode": 400,
+        "timestamp": "2026-11-06T06:57:45.195Z",
+        "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "method": "PUT",
+        "error": "Bad Request",
+        "message": [
+          "Імітація збою після збереження товару й матеріалів. Транзакцію відкочено."
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47",
+      "status": 200,
+      "response": {
+        "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "title": "Футболка QA-1793948249763",
+        "slug": "futbolka-qa-1793948249763",
+        "price": "799.99",
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collection": {
+          "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+          "name": "QA-1793948249763 Осінь",
+          "season": "Осінь 2026"
+        },
+        "materials": [
+          {
+            "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "id": "ebd39dcb-fccd-4091-b2d0-f31aad5a0295",
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "createdAt": "2026-11-06T06:57:44.980Z",
+        "updatedAt": "2026-11-06T06:57:44.980Z"
+      },
+      "headers": {
+        "responseTime": "6.68ms"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          }
+        ],
+        "care": {
+          "washTemperature": 40,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        }
+      },
+      "status": 200,
+      "response": {
+        "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "title": "Футболка QA-1793948249763",
+        "slug": "futbolka-qa-1793948249763",
+        "price": "799.99",
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collection": {
+          "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+          "name": "QA-1793948249763 Осінь",
+          "season": "Осінь 2026"
+        },
+        "materials": [
+          {
+            "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+            "name": "QA-1793948249763 Бавовна"
+          }
+        ],
+        "care": {
+          "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+          "washTemperature": 40,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "createdAt": "2026-11-06T06:57:44.980Z",
+        "updatedAt": "2026-11-06T06:57:44.980Z"
+      },
+      "headers": {
+        "responseTime": "24.85ms"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47",
+      "request": {
+        "price": 850
+      },
+      "status": 200,
+      "response": {
+        "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "title": "Футболка QA-1793948249763",
+        "slug": "futbolka-qa-1793948249763",
+        "price": "850.00",
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collection": {
+          "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+          "name": "QA-1793948249763 Осінь",
+          "season": "Осінь 2026"
+        },
+        "materials": [
+          {
+            "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+            "name": "QA-1793948249763 Бавовна"
+          }
+        ],
+        "care": {
+          "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+          "washTemperature": 40,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "createdAt": "2026-11-06T06:57:44.980Z",
+        "updatedAt": "2026-11-06T06:57:45.248Z"
+      },
+      "headers": {
+        "responseTime": "17.08ms"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes",
+      "request": {
+        "title": "QA-1793948249763 Second",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        }
+      },
+      "status": 201,
+      "response": {
+        "id": "cbc7607d-3f30-480a-a011-3c37928d07d8",
+        "title": "QA-1793948249763 Second",
+        "slug": "qa-1793948249763-second",
+        "price": "799.99",
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collection": {
+          "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+          "name": "QA-1793948249763 Осінь",
+          "season": "Осінь 2026"
+        },
+        "materials": [
+          {
+            "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+            "name": "QA-1793948249763 Бавовна"
+          }
+        ],
+        "care": {
+          "id": "43aabff4-8e01-425e-a57a-0ab0b5e57e50",
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "createdAt": "2026-11-06T06:57:45.257Z",
+        "updatedAt": "2026-11-06T06:57:45.257Z"
+      },
+      "headers": {
+        "responseTime": "13.83ms"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/materials/7fa226c6-a181-47de-b611-6832a73a8f2c",
+      "status": 409,
+      "response": {
+        "success": false,
+        "statusCode": 409,
+        "timestamp": "2026-11-06T06:57:45.276Z",
+        "path": "/materials/7fa226c6-a181-47de-b611-6832a73a8f2c",
+        "method": "DELETE",
+        "message": [
+          "Операція порушує зв’язок між записами"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/collections",
+      "request": {
+        "name": "QA-1793948249763 Осінь",
+        "season": "2026"
+      },
+      "status": 409,
+      "response": {
+        "success": false,
+        "statusCode": 409,
+        "timestamp": "2026-11-06T06:57:45.284Z",
+        "path": "/collections",
+        "method": "POST",
+        "message": [
+          "Запис із такою унікальною назвою вже існує"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/orders",
+      "request": {
+        "productId": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "quantity": 2,
+        "customerEmail": "student@example.com"
+      },
+      "status": 201,
+      "response": {
+        "orderId": "ord-b61a04eb-a294-407e-a5e6-731ddd105b72",
+        "customerEmail": "student@example.com",
+        "productId": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "productTitle": "Футболка QA-1793948249763",
+        "productSlug": "futbolka-qa-1793948249763",
+        "unitPrice": 850,
+        "quantity": 2,
+        "subtotal": 1700,
+        "taxAmount": 340,
+        "total": 2040,
+        "currency": "UAH",
+        "status": "confirmed",
+        "createdAt": "2026-11-06T06:57:45.302Z"
+      },
+      "headers": {
+        "responseTime": "8.36ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47/aggregate",
+      "status": 200,
+      "response": {
+        "id": "cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "title": "Футболка QA-1793948249763",
+        "slug": "futbolka-qa-1793948249763",
+        "price": "850.00",
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collection": {
+          "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+          "name": "QA-1793948249763 Осінь",
+          "season": "Осінь 2026"
+        },
+        "materials": [
+          {
+            "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+            "name": "QA-1793948249763 Бавовна"
+          }
+        ],
+        "care": {
+          "id": "eb6c9556-8570-4018-8ab4-588cc8ca929a",
+          "washTemperature": 40,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "createdAt": "2026-11-06T06:57:44.980Z",
+        "updatedAt": "2026-11-06T06:57:45.248Z"
+      },
+      "headers": {
+        "responseTime": "15.40ms"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/clothes/transactional",
+      "request": {
+        "title": "  Футболка QA-1793948249763  ",
+        "price": 799.99,
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collectionId": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+        "materials": [
+          {
+            "name": "QA-1793948249763 Бавовна"
+          },
+          {
+            "name": "QA-1793948249763 Льон"
+          }
+        ],
+        "care": {
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "simulateFailure": true
+      },
+      "status": 403,
+      "response": {
+        "success": false,
+        "statusCode": 403,
+        "timestamp": "2026-11-06T06:57:48.817Z",
+        "path": "/clothes/transactional",
+        "method": "POST",
+        "error": "Forbidden",
+        "message": [
+          "Для демонстрації збою увімкніть LAB_ALLOW_FAILURE_DEMO=true"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47",
+      "status": 204,
+      "response": "",
+      "headers": {
+        "responseTime": "6.27ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47",
+      "status": 404,
+      "response": {
+        "success": false,
+        "statusCode": 404,
+        "timestamp": "2026-11-06T06:57:48.833Z",
+        "path": "/clothes/cffe1b7d-f8e8-459e-83a4-596102261e47",
+        "method": "GET",
+        "error": "Not Found",
+        "message": [
+          "Товар cffe1b7d-f8e8-459e-83a4-596102261e47 не знайдено"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes/cbc7607d-3f30-480a-a011-3c37928d07d8",
+      "status": 200,
+      "response": {
+        "id": "cbc7607d-3f30-480a-a011-3c37928d07d8",
+        "title": "QA-1793948249763 Second",
+        "slug": "qa-1793948249763-second",
+        "price": "799.99",
+        "size": "M",
+        "material": "Бавовна / льон",
+        "color": "Білий",
+        "collection": {
+          "id": "574fb835-d9ee-4b94-8268-952c2ae4b09a",
+          "name": "QA-1793948249763 Осінь",
+          "season": "Осінь 2026"
+        },
+        "materials": [
+          {
+            "id": "7fa226c6-a181-47de-b611-6832a73a8f2c",
+            "name": "QA-1793948249763 Бавовна"
+          }
+        ],
+        "care": {
+          "id": "43aabff4-8e01-425e-a57a-0ab0b5e57e50",
+          "washTemperature": 30,
+          "ironAllowed": true,
+          "instructions": "Делікатне прання"
+        },
+        "createdAt": "2026-11-06T06:57:45.257Z",
+        "updatedAt": "2026-11-06T06:57:45.257Z"
+      },
+      "headers": {
+        "responseTime": "7.72ms"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/collections/574fb835-d9ee-4b94-8268-952c2ae4b09a",
+      "status": 204,
+      "response": "",
+      "headers": {
+        "responseTime": "2.53ms"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/clothes/cbc7607d-3f30-480a-a011-3c37928d07d8",
+      "status": 404,
+      "response": {
+        "success": false,
+        "statusCode": 404,
+        "timestamp": "2026-11-06T06:57:48.856Z",
+        "path": "/clothes/cbc7607d-3f30-480a-a011-3c37928d07d8",
+        "method": "GET",
+        "error": "Not Found",
+        "message": [
+          "Товар cbc7607d-3f30-480a-a011-3c37928d07d8 не знайдено"
+        ]
+      },
+      "headers": {
+        "responseTime": null
+      }
+    }
+  ]
+}

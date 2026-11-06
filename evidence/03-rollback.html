@@ -1,0 +1,25 @@
+<!doctype html><html lang=uk><meta charset=utf-8><style>*{box-sizing:border-box}body{margin:0;background:#eef2f6;color:#16253b;font:17px 'Segoe UI',sans-serif;padding:36px}main{max-width:1120px;margin:auto}h1{font-size:29px;margin:0 0 8px}p{color:#536477}.tag{display:inline-block;background:#d7f4e6;color:#136841;padding:7px 12px;border-radius:6px;font-weight:600}pre{background:white;padding:22px;border:1px solid #ced8e4;border-radius:9px;font:15px Consolas,monospace;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}li{background:white;padding:10px 14px;border-bottom:1px solid #dae1ea;list-style:none}ul{padding:0}footer{font-size:13px;color:#536477;margin-top:16px}</style><main><h1>Rollback після часткового збереження</h1><p>Штучний збій усередині DataSource.transaction після INSERT товару й матеріалів</p><span class=tag>POST /clothes/transactional → 400</span><pre>{
+  "success": false,
+  "statusCode": 400,
+  "timestamp": "2026-11-06T06:57:45.165Z",
+  "path": "/clothes/transactional",
+  "method": "POST",
+  "error": "Bad Request",
+  "message": [
+    "Імітація збою після збереження товару й матеріалів. Транзакцію відкочено."
+  ]
+}</pre><h2>Кількість рядків у PostgreSQL</h2><pre>{
+  "operation": "rollback",
+  "before": {
+    "clothes": 1,
+    "materials": 2,
+    "care": 1,
+    "links": 2
+  },
+  "after": {
+    "clothes": 1,
+    "materials": 2,
+    "care": 1,
+    "links": 2
+  }
+}</pre><p>До і після збою: 1 товар, 2 матеріали, 1 інструкція догляду, 2 рядки зв’язку.</p><footer>Джерело: evidence/results.json. Це перегляд записаних результатів перевірки.</footer></main></html>

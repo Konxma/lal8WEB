@@ -1,0 +1,145 @@
+
+$ typeorm migration:revert
+query: SELECT version()
+query: SELECT * FROM current_schema()
+query: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'migrations'
+query: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+3 migrations are already loaded in the database.
+AddCareInstructions1793947960048 is the last executed migration. It was executed on Fri Nov 06 2026 08:52:40 GMT+0200 (за східноєвропейським стандартним часом).
+Now reverting it...
+query: START TRANSACTION
+query: ALTER TABLE "care_instructions" DROP CONSTRAINT "FK_f86c55468c9c5bed9a4e06b3525"
+query: DROP TABLE "care_instructions"
+query: DELETE FROM "migrations" WHERE "timestamp" = $1 AND "name" = $2 -- PARAMETERS: [1793947960048,"AddCareInstructions1793947960048"]
+Migration AddCareInstructions1793947960048 has been reverted successfully.
+query: COMMIT
+
+$ typeorm migration:revert
+query: SELECT version()
+query: SELECT * FROM current_schema()
+query: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'migrations'
+query: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+2 migrations are already loaded in the database.
+AddMaterials1793947932772 is the last executed migration. It was executed on Fri Nov 06 2026 08:52:12 GMT+0200 (за східноєвропейським стандартним часом).
+Now reverting it...
+query: START TRANSACTION
+query: ALTER TABLE "clothing_materials" DROP CONSTRAINT "FK_01f941b1af05aae4560dc8e77a1"
+query: ALTER TABLE "clothing_materials" DROP CONSTRAINT "FK_cef3ff8b54e3be7d04ab3dfdba2"
+query: DROP INDEX "public"."IDX_01f941b1af05aae4560dc8e77a"
+query: DROP INDEX "public"."IDX_cef3ff8b54e3be7d04ab3dfdba"
+query: DROP TABLE "clothing_materials"
+query: DROP TABLE "materials"
+query: DELETE FROM "migrations" WHERE "timestamp" = $1 AND "name" = $2 -- PARAMETERS: [1793947932772,"AddMaterials1793947932772"]
+Migration AddMaterials1793947932772 has been reverted successfully.
+query: COMMIT
+
+$ typeorm migration:revert
+query: SELECT version()
+query: SELECT * FROM current_schema()
+query: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'migrations'
+query: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+1 migrations are already loaded in the database.
+CreateCollectionsAndClothes1793947904499 is the last executed migration. It was executed on Fri Nov 06 2026 08:51:44 GMT+0200 (за східноєвропейським стандартним часом).
+Now reverting it...
+query: START TRANSACTION
+query: ALTER TABLE "clothes" DROP CONSTRAINT "FK_c335a778290c1b9add1fdf1b022"
+query: DROP TABLE "collections"
+query: DROP TABLE "clothes"
+query: DROP TYPE "public"."clothes_size_enum"
+query: DELETE FROM "migrations" WHERE "timestamp" = $1 AND "name" = $2 -- PARAMETERS: [1793947904499,"CreateCollectionsAndClothes1793947904499"]
+Migration CreateCollectionsAndClothes1793947904499 has been reverted successfully.
+query: COMMIT
+
+$ typeorm migration:run
+query: SELECT version()
+query: SELECT * FROM current_schema()
+query: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'migrations'
+query: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+0 migrations are already loaded in the database.
+3 migrations were found in the source code.
+3 migrations are new migrations must be executed.
+query: START TRANSACTION
+query: CREATE TYPE "public"."clothes_size_enum" AS ENUM('XS', 'S', 'M', 'L', 'XL')
+query: CREATE TABLE "clothes" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "title" character varying(150) NOT NULL, "slug" character varying(200) NOT NULL, "price" numeric(10,2) NOT NULL, "size" "public"."clothes_size_enum" NOT NULL, "material" character varying(100) NOT NULL, "color" character varying(50) NOT NULL, "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "collection_id" uuid NOT NULL, CONSTRAINT "CHK_clothes_positive_price" CHECK ("price" > 0), CONSTRAINT "PK_c73aa6c72fd4b3213bfcdc8739b" PRIMARY KEY ("id"))
+query: CREATE TABLE "collections" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(100) NOT NULL, "season" character varying(40) NOT NULL, CONSTRAINT "UQ_ed225078e8bf65b448b69105b45" UNIQUE ("name"), CONSTRAINT "PK_21c00b1ebbd41ba1354242c5c4e" PRIMARY KEY ("id"))
+query: ALTER TABLE "clothes" ADD CONSTRAINT "FK_c335a778290c1b9add1fdf1b022" FOREIGN KEY ("collection_id") REFERENCES "collections"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+query: INSERT INTO "migrations"("timestamp", "name") VALUES ($1, $2) -- PARAMETERS: [1793947904499,"CreateCollectionsAndClothes1793947904499"]
+Migration CreateCollectionsAndClothes1793947904499 has been executed successfully.
+query: CREATE TABLE "materials" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(80) NOT NULL, CONSTRAINT "UQ_9b614bb357c5d8741a1a381385c" UNIQUE ("name"), CONSTRAINT "PK_2fd1a93ecb222a28bef28663fa0" PRIMARY KEY ("id"))
+query: CREATE TABLE "clothing_materials" ("clothing_id" uuid NOT NULL, "material_id" uuid NOT NULL, CONSTRAINT "PK_3c56a3342bcf00034fa7cb16a75" PRIMARY KEY ("clothing_id", "material_id"))
+query: CREATE INDEX "IDX_cef3ff8b54e3be7d04ab3dfdba" ON "clothing_materials" ("clothing_id") 
+query: CREATE INDEX "IDX_01f941b1af05aae4560dc8e77a" ON "clothing_materials" ("material_id") 
+query: ALTER TABLE "clothing_materials" ADD CONSTRAINT "FK_cef3ff8b54e3be7d04ab3dfdba2" FOREIGN KEY ("clothing_id") REFERENCES "clothes"("id") ON DELETE CASCADE ON UPDATE CASCADE
+query: ALTER TABLE "clothing_materials" ADD CONSTRAINT "FK_01f941b1af05aae4560dc8e77a1" FOREIGN KEY ("material_id") REFERENCES "materials"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+query: INSERT INTO "migrations"("timestamp", "name") VALUES ($1, $2) -- PARAMETERS: [1793947932772,"AddMaterials1793947932772"]
+Migration AddMaterials1793947932772 has been executed successfully.
+query: CREATE TABLE "care_instructions" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "washTemperature" integer NOT NULL, "ironAllowed" boolean NOT NULL DEFAULT false, "instructions" character varying(500) NOT NULL, "clothing_id" uuid NOT NULL, CONSTRAINT "REL_f86c55468c9c5bed9a4e06b352" UNIQUE ("clothing_id"), CONSTRAINT "CHK_care_temperature" CHECK ("washTemperature" BETWEEN 0 AND 95), CONSTRAINT "PK_b40d04705ccced5ae0b4c783c10" PRIMARY KEY ("id"))
+query: ALTER TABLE "care_instructions" ADD CONSTRAINT "FK_f86c55468c9c5bed9a4e06b3525" FOREIGN KEY ("clothing_id") REFERENCES "clothes"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+query: INSERT INTO "migrations"("timestamp", "name") VALUES ($1, $2) -- PARAMETERS: [1793947960048,"AddCareInstructions1793947960048"]
+Migration AddCareInstructions1793947960048 has been executed successfully.
+query: COMMIT
+
+$ typeorm migration:revert
+query: SELECT version()
+query: SELECT * FROM current_schema()
+query: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'migrations'
+query: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+3 migrations are already loaded in the database.
+AddCareInstructions1793947960048 is the last executed migration. It was executed on Fri Nov 06 2026 08:52:40 GMT+0200 (за східноєвропейським стандартним часом).
+Now reverting it...
+query: START TRANSACTION
+query: ALTER TABLE "care_instructions" DROP CONSTRAINT "FK_f86c55468c9c5bed9a4e06b3525"
+query: DROP TABLE "care_instructions"
+query: DELETE FROM "migrations" WHERE "timestamp" = $1 AND "name" = $2 -- PARAMETERS: [1793947960048,"AddCareInstructions1793947960048"]
+Migration AddCareInstructions1793947960048 has been reverted successfully.
+query: COMMIT
+
+$ typeorm migration:revert
+query: SELECT version()
+query: SELECT * FROM current_schema()
+query: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'migrations'
+query: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+2 migrations are already loaded in the database.
+AddMaterials1793947932772 is the last executed migration. It was executed on Fri Nov 06 2026 08:52:12 GMT+0200 (за східноєвропейським стандартним часом).
+Now reverting it...
+query: START TRANSACTION
+query: ALTER TABLE "clothing_materials" DROP CONSTRAINT "FK_01f941b1af05aae4560dc8e77a1"
+query: ALTER TABLE "clothing_materials" DROP CONSTRAINT "FK_cef3ff8b54e3be7d04ab3dfdba2"
+query: DROP INDEX "public"."IDX_01f941b1af05aae4560dc8e77a"
+query: DROP INDEX "public"."IDX_cef3ff8b54e3be7d04ab3dfdba"
+query: DROP TABLE "clothing_materials"
+query: DROP TABLE "materials"
+query: DELETE FROM "migrations" WHERE "timestamp" = $1 AND "name" = $2 -- PARAMETERS: [1793947932772,"AddMaterials1793947932772"]
+Migration AddMaterials1793947932772 has been reverted successfully.
+query: COMMIT
+
+$ typeorm migration:run
+query: SELECT version()
+query: SELECT * FROM current_schema()
+query: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'migrations'
+query: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+1 migrations are already loaded in the database.
+3 migrations were found in the source code.
+CreateCollectionsAndClothes1793947904499 is the last executed migration. It was executed on Fri Nov 06 2026 08:51:44 GMT+0200 (за східноєвропейським стандартним часом).
+2 migrations are new migrations must be executed.
+query: START TRANSACTION
+query: CREATE TABLE "materials" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(80) NOT NULL, CONSTRAINT "UQ_9b614bb357c5d8741a1a381385c" UNIQUE ("name"), CONSTRAINT "PK_2fd1a93ecb222a28bef28663fa0" PRIMARY KEY ("id"))
+query: CREATE TABLE "clothing_materials" ("clothing_id" uuid NOT NULL, "material_id" uuid NOT NULL, CONSTRAINT "PK_3c56a3342bcf00034fa7cb16a75" PRIMARY KEY ("clothing_id", "material_id"))
+query: CREATE INDEX "IDX_cef3ff8b54e3be7d04ab3dfdba" ON "clothing_materials" ("clothing_id") 
+query: CREATE INDEX "IDX_01f941b1af05aae4560dc8e77a" ON "clothing_materials" ("material_id") 
+query: ALTER TABLE "clothing_materials" ADD CONSTRAINT "FK_cef3ff8b54e3be7d04ab3dfdba2" FOREIGN KEY ("clothing_id") REFERENCES "clothes"("id") ON DELETE CASCADE ON UPDATE CASCADE
+query: ALTER TABLE "clothing_materials" ADD CONSTRAINT "FK_01f941b1af05aae4560dc8e77a1" FOREIGN KEY ("material_id") REFERENCES "materials"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+query: INSERT INTO "migrations"("timestamp", "name") VALUES ($1, $2) -- PARAMETERS: [1793947932772,"AddMaterials1793947932772"]
+Migration AddMaterials1793947932772 has been executed successfully.
+query: CREATE TABLE "care_instructions" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "washTemperature" integer NOT NULL, "ironAllowed" boolean NOT NULL DEFAULT false, "instructions" character varying(500) NOT NULL, "clothing_id" uuid NOT NULL, CONSTRAINT "REL_f86c55468c9c5bed9a4e06b352" UNIQUE ("clothing_id"), CONSTRAINT "CHK_care_temperature" CHECK ("washTemperature" BETWEEN 0 AND 95), CONSTRAINT "PK_b40d04705ccced5ae0b4c783c10" PRIMARY KEY ("id"))
+query: ALTER TABLE "care_instructions" ADD CONSTRAINT "FK_f86c55468c9c5bed9a4e06b3525" FOREIGN KEY ("clothing_id") REFERENCES "clothes"("id") ON DELETE CASCADE ON UPDATE NO ACTION
+query: INSERT INTO "migrations"("timestamp", "name") VALUES ($1, $2) -- PARAMETERS: [1793947960048,"AddCareInstructions1793947960048"]
+Migration AddCareInstructions1793947960048 has been executed successfully.
+query: COMMIT

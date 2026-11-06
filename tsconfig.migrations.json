@@ -1,0 +1,1 @@
+{"extends":"./tsconfig.json","include":["src/database/**/*.ts","src/clothes/entities/**/*.ts"],"exclude":["node_modules","dist"]}
